@@ -1,0 +1,17 @@
+[app]
+app-lab2 ansible_host=192.168.40.10
+
+[postgres]
+pg-standby2 ansible_host=192.168.40.11
+
+[db2]
+db2-lab2 ansible_host=192.168.40.12
+
+[linux:children]
+app
+postgres
+db2
+
+[linux:vars]
+ansible_user=khevi
+ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,40 @@
+---
+- name: Deploy custom Nginx container on application server
+  hosts: app
+  become: true
+
+  vars:
+    nginx_content_dir: /opt/web-lab2
+
+  tasks:
+    - name: Create Nginx content directory
+      ansible.builtin.file:
+        path: "{{ nginx_content_dir }}"
+        state: directory
+        owner: khevi
+        group: khevi
+        mode: "0755"
+
+    - name: Copy custom webpage
+      ansible.builtin.copy:
+        src: ../files/index.html
+        dest: "{{ nginx_content_dir }}/index.html"
+        owner: khevi
+        group: khevi
+        mode: "0644"
+
+    - name: Pull Nginx Alpine image
+      community.docker.docker_image:
+        name: nginx:alpine
+        source: pull
+
+    - name: Run Nginx container
+      community.docker.docker_container:
+        name: web-lab2
+        image: nginx:alpine
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "8080:80"
+        volumes:
+          - "{{ nginx_content_dir }}:/usr/share/nginx/html:ro"

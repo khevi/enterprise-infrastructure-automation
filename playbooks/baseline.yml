@@ -1,0 +1,7 @@
+---
+- name: Configure baseline on Linux servers
+  hosts: linux
+  become: true
+
+  roles:
+    - common

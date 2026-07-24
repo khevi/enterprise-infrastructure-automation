@@ -1,0 +1,21 @@
+---
+- name: Install Docker and Python SDK
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - python3-docker
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Enable and start Docker
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Add khevi to Docker group
+  ansible.builtin.user:
+    name: khevi
+    groups: docker
+    append: true

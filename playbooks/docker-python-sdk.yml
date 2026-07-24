@@ -1,0 +1,12 @@
+---
+- name: Install Docker Python SDK on application server
+  hosts: app
+  become: true
+
+  tasks:
+    - name: Install Python Docker SDK package
+      ansible.builtin.apt:
+        name: python3-docker
+        state: present
+        update_cache: true
+        cache_valid_time: 3600

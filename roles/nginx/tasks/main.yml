@@ -1,0 +1,32 @@
+---
+- name: Create Nginx content directory
+  ansible.builtin.file:
+    path: /opt/web-lab2
+    state: directory
+    owner: khevi
+    group: khevi
+    mode: "0755"
+
+- name: Copy custom webpage
+  ansible.builtin.copy:
+    src: index.html
+    dest: /opt/web-lab2/index.html
+    owner: khevi
+    group: khevi
+    mode: "0644"
+
+- name: Pull Nginx Alpine image
+  community.docker.docker_image:
+    name: nginx:alpine
+    source: pull
+
+- name: Run Nginx container
+  community.docker.docker_container:
+    name: web-lab2
+    image: nginx:alpine
+    state: started
+    restart_policy: unless-stopped
+    published_ports:
+      - "8080:80"
+    volumes:
+      - "/opt/web-lab2:/usr/share/nginx/html:ro"
