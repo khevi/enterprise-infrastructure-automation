@@ -34,10 +34,10 @@ The objective of this project is to demonstrate production-style DevOps practice
 
 | Host | IP Address | Purpose |
 |------|------------|---------|
-| ubuntu-lab2 | 192.168.40.9 | Ansible Control Node |
-| app-lab2 | 192.168.40.10 | Docker & Nginx |
-| pg-standby2 | 192.168.40.11 | PostgreSQL |
-| db2-lab2 | 192.168.40.12 | IBM Db2 |
+| ubuntu-lab2 | 100.100.10.9 | Ansible Control Node |
+| app-lab2 | 100.100.10.10 | Docker & Nginx |
+| pg-standby2 | 100.100.10.11 | PostgreSQL |
+| db2-lab2 | 100.100.10.12 | IBM Db2 |
 
 ---
 
