@@ -1,97 +1,144 @@
 # Enterprise Infrastructure Automation
 
-An enterprise-style Infrastructure as Code (IaC) project built with **Ansible** to automate the deployment and configuration of Linux servers, Docker containers, and database services.
+Enterprise Infrastructure Automation is a hands-on DevOps project that demonstrates how to automate the deployment and management of Linux infrastructure using **Ansible**, **Docker**, **PostgreSQL**, and **Jenkins**.
 
-The objective of this project is to demonstrate production-style DevOps practices including configuration management, infrastructure automation, containerization, and service deployment.
-
----
-
-# Architecture
-
-```
-                    +----------------------+
-                    | ubuntu-lab2          |
-                    |----------------------|
-                    | Ansible Controller   |
-                    | Git                  |
-                    | Playbooks            |
-                    +----------+-----------+
-                               |
-        --------------------------------------------
-        |                    |                     |
-        |                    |                     |
-+---------------+    +----------------+    +----------------+
-| app-lab2      |    | pg-standby2    |    | db2-lab2       |
-|---------------|    |----------------|    |----------------|
-| Docker        |    | PostgreSQL 14  |    | IBM Db2        |
-| Nginx         |    |                |    | (Coming Soon)  |
-+---------------+    +----------------+    +----------------+
-```
+The objective of this project is to build an enterprise-style environment where infrastructure, applications, and CI/CD pipelines are managed through Infrastructure as Code (IaC) and automation.
 
 ---
 
-# Environment
+# Project Goals
 
-| Host | IP Address | Purpose |
-|------|------------|---------|
-| ubuntu-lab2 | 100.100.10.9 | Ansible Control Node |
-| app-lab2 | 100.100.10.10 | Docker & Nginx |
-| pg-standby2 | 100.100.10.11 | PostgreSQL |
-| db2-lab2 | 100.100.10.12 | IBM Db2 |
+- Build an enterprise-style Linux environment
+- Automate infrastructure using Ansible
+- Deploy containerized applications with Docker
+- Manage PostgreSQL automatically
+- Implement a dedicated Jenkins CI/CD server
+- Demonstrate Infrastructure as Code best practices
+- Build a portfolio-quality DevOps project
+
+---
+
+# Current Architecture
+
+```text
+                               GitHub
+                                  │
+                                  │
+                                  ▼
+                        +----------------------+
+                        |   Jenkins Server     |
+                        |    jenkins-lab2      |
+                        +----------+-----------+
+                                   │
+                                   │
+                                   ▼
+                        +----------------------+
+                        |  Ansible Controller  |
+                        |    ubuntu-lab2       |
+                        +----------+-----------+
+                                   │
+          ------------------------------------------------------
+          │                      │                      │
+          │                      │                      │
+          ▼                      ▼                      ▼
++------------------+   +------------------+   +------------------+
+|  app-lab2        |   | pg-standby2      |   | db2-lab2         |
+|------------------|   |------------------|   |------------------|
+| Docker           |   | PostgreSQL 14    |   | IBM Db2          |
+| Nginx            |   | Database Server  |   | Database Server  |
++------------------+   +------------------+   +------------------+
+```
+
+---
+
+# Lab Environment
+
+| Server | Purpose |
+|---------|---------|
+| ubuntu-lab2 | Ansible Control Node |
+| app-lab2 | Docker & Nginx Application Server |
+| pg-standby2 | PostgreSQL Database Server |
+| db2-lab2 | IBM Db2 Server |
+| jenkins-lab2 | Jenkins CI/CD Server |
 
 ---
 
 # Technologies
 
-- Ubuntu Server 22.04
+- Ubuntu Server 22.04 LTS
 - Ansible
 - Docker
 - Nginx
 - PostgreSQL 14
+- Jenkins LTS
 - Git
-- Linux
+- GitHub
 - SSH
+
+---
+
+# Repository Structure
+
+```text
+enterprise-infrastructure-automation/
+│
+├── ansible.cfg
+├── README.md
+├── inventory/
+│   └── hosts
+│
+├── playbooks/
+│   ├── baseline.yml
+│   ├── docker.yml
+│   ├── nginx-container.yml
+│   ├── postgresql.yml
+│   └── jenkins.yml
+│
+├── roles/
+│   ├── common/
+│   ├── docker/
+│   ├── nginx/
+│   ├── postgresql/
+│   └── jenkins/
+│
+├── group_vars/
+├── host_vars/
+├── files/
+├── templates/
+└── docs/
+```
 
 ---
 
 # Current Features
 
-- Passwordless SSH automation
-- Inventory-based Ansible deployment
-- Role-based Ansible project
-- Docker installation
-- Docker Python SDK installation
-- Nginx container deployment
-- Custom web page deployment
-- PostgreSQL installation
-- PostgreSQL service management
-- Idempotent Ansible playbooks
+✅ Passwordless SSH authentication
 
----
+✅ Centralized Ansible inventory
 
-# Project Structure
+✅ Role-based Ansible architecture
 
-```text
-enterprise-infrastructure-automation/
-├── ansible.cfg
-├── inventory/
-├── playbooks/
-├── roles/
-│   ├── common/
-│   ├── docker/
-│   ├── nginx/
-│   └── postgresql/
-├── files/
-├── templates/
-├── docs/
-└── README.md
-```
+✅ Baseline Linux configuration
+
+✅ Docker installation and configuration
+
+✅ Docker Python SDK installation
+
+✅ Automated Nginx container deployment
+
+✅ Custom web page deployment
+
+✅ PostgreSQL installation and service management
+
+✅ Dedicated Jenkins server deployment
+
+✅ Idempotent playbooks
 
 ---
 
 # Example Commands
 
-Verify connectivity
+Verify all managed servers
 
 ```bash
 ansible linux -m ping
@@ -121,6 +168,12 @@ Deploy PostgreSQL
 ansible-playbook playbooks/postgresql.yml --ask-become-pass
 ```
 
+Deploy Jenkins
+
+```bash
+ansible-playbook playbooks/jenkins.yml --ask-become-pass
+```
+
 ---
 
 # Skills Demonstrated
@@ -129,28 +182,52 @@ ansible-playbook playbooks/postgresql.yml --ask-become-pass
 - Configuration Management
 - Linux Administration
 - Docker Containerization
+- CI/CD Infrastructure
 - PostgreSQL Administration
-- Automation with Ansible
-- SSH Key Management
+- SSH Key Authentication
 - Git Version Control
+- GitHub
+- Enterprise Infrastructure Automation
 - Idempotent Deployments
 
 ---
 
-# Roadmap
+# Project Roadmap
 
-- [x] Configure Ansible Control Node
-- [x] Deploy Docker
-- [x] Deploy Nginx Container
-- [x] Install PostgreSQL
-- [ ] Configure PostgreSQL Database Automation
-- [ ] Install IBM Db2
-- [ ] Deploy Jenkins
-- [ ] Configure Prometheus
-- [ ] Configure Grafana
-- [ ] Deploy Kubernetes (k3s)
-- [ ] Infrastructure Provisioning with Terraform
-- [ ] CI/CD Pipeline
+## Completed
+
+- [x] Ubuntu infrastructure
+- [x] SSH key authentication
+- [x] Ansible inventory
+- [x] Role-based automation
+- [x] Docker deployment
+- [x] Nginx deployment
+- [x] PostgreSQL deployment
+- [x] Jenkins server deployment
+
+## In Progress
+
+- [ ] Jenkins Pipeline
+- [ ] GitHub Webhooks
+- [ ] Automated Application Deployment
+
+## Planned
+
+- [ ] Prometheus
+- [ ] Grafana
+- [ ] IBM Db2 Automation
+- [ ] Kubernetes (k3s)
+- [ ] Helm
+- [ ] Terraform
+- [ ] AWS Infrastructure
+- [ ] Azure Infrastructure
+- [ ] GCP Infrastructure
+
+---
+
+# Future Enhancements
+
+This project will continue evolving into a complete enterprise DevOps platform by integrating monitoring, container orchestration, cloud infrastructure, and automated CI/CD pipelines.
 
 ---
 
@@ -159,3 +236,5 @@ ansible-playbook playbooks/postgresql.yml --ask-become-pass
 **Kossi Hevi-Doglan**
 
 DevOps Engineer | Cloud Engineer | Infrastructure Automation
+
+GitHub: https://github.com/khevi
