@@ -1,6 +1,14 @@
 pipeline {
     agent any
 
+    environment {
+        CONTROLLER = 'khevi@192.168.40.9'
+        DEPLOY_DIR = '/home/khevi/jenkins-deploy/enterprise-infrastructure-automation'
+        REPOSITORY = 'https://github.com/khevi/enterprise-infrastructure-automation.git'
+        DEPLOY_BRANCH = 'feature/jenkins-deployment'
+        APP_URL = 'http://192.168.40.10:8080'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -12,44 +20,77 @@ pipeline {
             steps {
                 sh '''
                     ssh -o StrictHostKeyChecking=accept-new \
-                    khevi@192.168.40.9 hostname
+                    ${CONTROLLER} hostname
                 '''
             }
         }
 
-        stage('Verify Ansible') {
+        stage('Synchronize Deployment Repository') {
             steps {
                 sh '''
-                    ssh khevi@192.168.40.9 \
-                    "cd ~/enterprise-infrastructure-automation && ansible --version"
+                    ssh ${CONTROLLER} "
+                        set -e
+
+                        if [ ! -d '${DEPLOY_DIR}/.git' ]; then
+                            mkdir -p /home/khevi/jenkins-deploy
+                            git clone '${REPOSITORY}' '${DEPLOY_DIR}'
+                        fi
+
+                        cd '${DEPLOY_DIR}'
+                        git fetch origin '${DEPLOY_BRANCH}'
+                        git checkout -B '${DEPLOY_BRANCH}' \
+                            'origin/${DEPLOY_BRANCH}'
+                    "
                 '''
             }
         }
 
-        stage('Ansible Inventory Test') {
+        stage('Ansible Syntax Check') {
             steps {
                 sh '''
-                    ssh khevi@192.168.40.9 \
-                    "cd ~/enterprise-infrastructure-automation && ansible linux -m ping"
+                    ssh ${CONTROLLER} "
+                        cd '${DEPLOY_DIR}' &&
+                        ansible-playbook \
+                        playbooks/nginx-container.yml \
+                        --syntax-check
+                    "
                 '''
             }
         }
 
-        stage('Syntax Check') {
+        stage('Deploy Nginx') {
             steps {
                 sh '''
-                    ssh khevi@192.168.40.9 \
-                    "cd ~/enterprise-infrastructure-automation && \
-                    ansible-playbook playbooks/nginx-container.yml --syntax-check"
+                    ssh ${CONTROLLER} "
+                        cd '${DEPLOY_DIR}' &&
+                        ansible-playbook \
+                        playbooks/nginx-container.yml
+                    "
                 '''
             }
         }
 
-        stage('Verify Application') {
+        stage('Verify Container') {
             steps {
                 sh '''
-                    curl --fail --silent --show-error \
-                    http://192.168.40.10:8080 > /dev/null
+                    ssh ${CONTROLLER} "
+                        cd '${DEPLOY_DIR}' &&
+                        ansible app -m shell \
+                        -a 'docker ps --filter name=web-lab2'
+                    "
+                '''
+            }
+        }
+
+        stage('Application Health Check') {
+            steps {
+                sh '''
+                    curl --fail \
+                         --silent \
+                         --show-error \
+                         --retry 5 \
+                         --retry-delay 3 \
+                         '${APP_URL}' > /dev/null
                 '''
             }
         }
@@ -57,11 +98,11 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully.'
+            echo 'Deployment completed successfully.'
         }
 
         failure {
-            echo 'Pipeline failed. Review the stage logs.'
+            echo 'Deployment failed. Review the stage logs.'
         }
     }
 }

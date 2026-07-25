@@ -1,7 +1,7 @@
 ---
 - name: Deploy Nginx container
   hosts: app
-  become: true
+  become: false
 
   roles:
     - nginx
