@@ -307,7 +307,7 @@ Current pipeline stages:
 - Validate the Nginx playbook syntax
 - Verify the deployed application health
 
-![Successful Jenkins Pipeline](docs/screenshots/jenkins-pipeline-success.png)
+![Enterprise Infrastructure Architecture](docs/architecture.png)
 
 ---
 

@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        CONTROLLER = 'khevi@192.168.40.9'
-        DEPLOY_DIR = '/home/khevi/jenkins-deploy/enterprise-infrastructure-automation'
-        REPOSITORY = 'https://github.com/khevi/enterprise-infrastructure-automation.git'
+        CONTROLLER   = 'khevi@192.168.40.9'
+        DEPLOY_DIR   = '/home/khevi/jenkins-deploy/enterprise-infrastructure-automation'
+        REPOSITORY   = 'https://github.com/khevi/enterprise-infrastructure-automation.git'
         DEPLOY_BRANCH = 'feature/jenkins-deployment'
-        APP_URL = 'http://192.168.40.10:8080'
+        APP_URL      = 'http://192.168.40.10:8080'
     }
 
     stages {
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 sh '''
                     ssh -o StrictHostKeyChecking=accept-new \
-                    ${CONTROLLER} hostname
+                        "$CONTROLLER" hostname
                 '''
             }
         }
@@ -28,18 +28,18 @@ pipeline {
         stage('Synchronize Deployment Repository') {
             steps {
                 sh '''
-                    ssh ${CONTROLLER} "
+                    ssh "$CONTROLLER" "
                         set -e
 
-                        if [ ! -d '${DEPLOY_DIR}/.git' ]; then
+                        if [ ! -d '$DEPLOY_DIR/.git' ]; then
                             mkdir -p /home/khevi/jenkins-deploy
-                            git clone '${REPOSITORY}' '${DEPLOY_DIR}'
+                            git clone '$REPOSITORY' '$DEPLOY_DIR'
                         fi
 
-                        cd '${DEPLOY_DIR}'
-                        git fetch origin '${DEPLOY_BRANCH}'
-                        git checkout -B '${DEPLOY_BRANCH}' \
-                            'origin/${DEPLOY_BRANCH}'
+                        cd '$DEPLOY_DIR'
+                        git fetch origin '$DEPLOY_BRANCH'
+                        git checkout -B '$DEPLOY_BRANCH' \
+                            'origin/$DEPLOY_BRANCH'
                     "
                 '''
             }
@@ -48,11 +48,11 @@ pipeline {
         stage('Ansible Syntax Check') {
             steps {
                 sh '''
-                    ssh ${CONTROLLER} "
-                        cd '${DEPLOY_DIR}' &&
+                    ssh "$CONTROLLER" "
+                        cd '$DEPLOY_DIR' &&
                         ansible-playbook \
-                        playbooks/nginx-container.yml \
-                        --syntax-check
+                            playbooks/nginx-container.yml \
+                            --syntax-check
                     "
                 '''
             }
@@ -61,10 +61,10 @@ pipeline {
         stage('Deploy Nginx') {
             steps {
                 sh '''
-                    ssh ${CONTROLLER} "
-                        cd '${DEPLOY_DIR}' &&
+                    ssh "$CONTROLLER" "
+                        cd '$DEPLOY_DIR' &&
                         ansible-playbook \
-                        playbooks/nginx-container.yml
+                            playbooks/nginx-container.yml
                     "
                 '''
             }
@@ -73,10 +73,11 @@ pipeline {
         stage('Verify Container') {
             steps {
                 sh '''
-                    ssh ${CONTROLLER} "
-                        cd '${DEPLOY_DIR}' &&
-                        ansible app -m shell \
-                        -a 'docker ps --filter name=web-lab2'
+                    ssh "$CONTROLLER" "
+                        cd '$DEPLOY_DIR' &&
+                        ansible app \
+                            -m shell \
+                            -a 'docker ps --filter name=web-lab2'
                     "
                 '''
             }
@@ -90,7 +91,7 @@ pipeline {
                          --show-error \
                          --retry 5 \
                          --retry-delay 3 \
-                         '${APP_URL}' > /dev/null
+                         "$APP_URL" > /dev/null
                 '''
             }
         }
