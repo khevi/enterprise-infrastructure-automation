@@ -294,6 +294,21 @@ This project will continue evolving into a complete enterprise DevOps platform f
 - Multi-cloud deployments
 - Production-style automation
 
+## CI/CD Pipeline
+
+The Jenkins validation pipeline connects the GitHub repository, Jenkins server, Ansible controller, and managed infrastructure.
+
+Current pipeline stages:
+
+- Checkout source code
+- Verify SSH access to the Ansible controller
+- Verify the Ansible installation
+- Test managed-host connectivity
+- Validate the Nginx playbook syntax
+- Verify the deployed application health
+
+![Successful Jenkins Pipeline](docs/screenshots/jenkins-pipeline-success.png)
+
 ---
 
 # Author
