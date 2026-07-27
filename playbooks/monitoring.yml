@@ -1,0 +1,14 @@
+---
+- name: Configure Node Exporter on managed servers
+  hosts: linux
+  become: true
+
+  roles:
+    - monitoring
+
+- name: Configure Node Exporter on Ansible controller
+  hosts: controller
+  become: true
+
+  roles:
+    - monitoring
