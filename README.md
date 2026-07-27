@@ -307,7 +307,21 @@ Current pipeline stages:
 - Validate the Nginx playbook syntax
 - Verify the deployed application health
 
+## Enterprise Architecture
+
+The diagram below illustrates the overall architecture of the Enterprise Infrastructure Automation Platform.
+
 ![Enterprise Infrastructure Architecture](docs/architecture.png)
+
+---
+
+## Monitoring Dashboard
+
+The platform is monitored using Prometheus and Grafana. The dashboard below displays real-time CPU, memory, disk, network, and system health metrics collected from all managed servers.
+
+![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
+
+
 
 ---
 
