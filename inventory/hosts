@@ -10,11 +10,15 @@ db2-lab2 ansible_host=192.168.40.12
 [jenkins]
 jenkins-lab2 ansible_host=192.168.40.13
 
+[monitoring]
+monitoring-lab2 ansible_host=192.168.40.14
+
 [linux:children]
 app
 postgres
 db2
 jenkins
+monitoring
 
 [linux:vars]
 ansible_user=khevi
