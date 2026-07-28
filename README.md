@@ -1,239 +1,275 @@
-# Enterprise Infrastructure Automation
+# Enterprise Infrastructure Automation Platform
 
-> An enterprise-style DevOps project demonstrating Infrastructure as Code (IaC), Configuration Management, Containerization, Database Automation, and Continuous Integration using Ansible, Docker, PostgreSQL, Jenkins, and Linux.
+A production-inspired DevOps platform demonstrating Infrastructure as Code (IaC), CI/CD, monitoring, containerization, and enterprise infrastructure automation using multiple Linux virtual machines.
 
 ---
 
 ## Overview
 
-Enterprise Infrastructure Automation is a hands-on DevOps project built to simulate a production-style environment.
+This project simulates an enterprise environment where infrastructure, applications, monitoring, and CI/CD are fully automated.
 
-The project demonstrates how infrastructure can be provisioned, configured, and managed using Ansible while integrating Docker containers, PostgreSQL, and a dedicated Jenkins CI/CD server.
+The objective is to demonstrate real-world DevOps practices including:
 
-The long-term objective is to evolve this project into a complete enterprise DevOps platform by adding monitoring, Kubernetes, Terraform, and cloud deployments.
-
----
-
-# Current Architecture
-
-```text
-                             GitHub
-                                │
-                                │ (Source Control)
-                                │
-                                ▼
-                     +-----------------------+
-                     |    Jenkins Server     |
-                     |     jenkins-lab2      |
-                     |     CI/CD Pipeline    |
-                     +-----------+-----------+
-                                 │
-                                 │ (Planned CI/CD Integration)
-                                 ▼
-                     +-----------------------+
-                     |   Ansible Controller  |
-                     |     ubuntu-lab2       |
-                     +-----------+-----------+
-                                 │
-      --------------------------------------------------------------
-      │                         │                        │
-      │                         │                        │
-      ▼                         ▼                        ▼
-+----------------+      +----------------+      +----------------+
-| app-lab2       |      | pg-standby2    |      | db2-lab2       |
-|----------------|      |----------------|      |----------------|
-| Docker         |      | PostgreSQL 14  |      | IBM Db2        |
-| Nginx          |      | Database       |      | Planned        |
-+----------------+      +----------------+      +----------------+
-```
+- Infrastructure as Code (IaC)
+- Configuration Management
+- Continuous Integration / Continuous Deployment (CI/CD)
+- Containerization
+- Enterprise Monitoring
+- Multi-server Administration
+- GitHub Feature Branch Workflow
 
 ---
 
-# Environment
+# Enterprise Architecture
 
-| Server | Purpose |
-|---------|---------|
-| ubuntu-lab2 | Ansible Control Node |
-| app-lab2 | Docker & Nginx Application Server |
-| pg-standby2 | PostgreSQL Database Server |
-| db2-lab2 | IBM Db2 Target Server *(planned automation)* |
-| jenkins-lab2 | Jenkins CI/CD Server |
+The diagram below illustrates the complete platform architecture.
+
+![Enterprise Architecture](docs/architecture.png)
 
 ---
 
-# Technologies
+# Monitoring Dashboard
 
-## Operating System
+The infrastructure is continuously monitored using Prometheus and Grafana.
 
-- Ubuntu Server 22.04 LTS
+The dashboard provides real-time visibility into:
 
-## Automation
+- CPU Utilization
+- Memory Usage
+- Disk Usage
+- Network Traffic
+- System Load
+- Filesystem Capacity
+- Host Availability
 
-- Ansible
+![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
 
-## Containers
+---
 
-- Docker
-- Nginx
+# Project Infrastructure
 
-## Databases
+| Server | Role | IP Address |
+|---------|------|------------|
+| ubuntu-lab2 | Ansible Controller | 192.168.40.9 |
+| app-lab2 | Docker Application Server | 192.168.40.10 |
+| pg-standby2 | PostgreSQL Server | 192.168.40.11 |
+| db2-lab2 | IBM Db2 Server | 192.168.40.12 |
+| jenkins-lab2 | Jenkins CI/CD | 192.168.40.13 |
+| monitoring-lab2 | Prometheus & Grafana | 192.168.40.14 |
 
-- PostgreSQL 14
-- IBM Db2 *(planned)*
+---
 
-## CI/CD
+# Technology Stack
 
-- Jenkins LTS
-
-## Version Control
-
-- Git
-- GitHub
-
-## Connectivity
-
-- SSH Key Authentication
+| Category | Technology |
+|-----------|------------|
+| Source Control | Git |
+| Repository | GitHub |
+| Automation | Ansible |
+| CI/CD | Jenkins |
+| Containers | Docker |
+| Web Server | Nginx |
+| Monitoring | Prometheus |
+| Visualization | Grafana |
+| Database | PostgreSQL |
+| Database | IBM Db2 |
+| Operating System | Ubuntu Server 24.04 |
+| Virtualization | VirtualBox |
 
 ---
 
 # Repository Structure
 
-```text
-enterprise-infrastructure-automation/
+```
+enterprise-infrastructure-automation
 │
-├── ansible.cfg
-├── README.md
-├── requirements.yml
+├── docs
+│   ├── architecture.drawio
+│   ├── architecture.png
+│   └── screenshots
+│       ├── grafana-dashboard.png
+│       ├── prometheus-targets.png
+│       └── jenkins-pipeline-success.png
 │
-├── inventory/
-│   ├── hosts.example
-│   └── hosts
+├── inventory
 │
-├── playbooks/
+├── playbooks
 │   ├── baseline.yml
 │   ├── docker.yml
 │   ├── nginx-container.yml
-│   ├── postgresql.yml
-│   └── jenkins.yml
+│   ├── monitoring.yml
+│   ├── prometheus.yml
+│   └── grafana.yml
 │
-├── roles/
-│   ├── common/
-│   ├── docker/
-│   ├── nginx/
-│   ├── postgresql/
-│   └── jenkins/
+├── roles
+│   ├── common
+│   ├── docker
+│   ├── nginx
+│   ├── monitoring
+│   ├── prometheus
+│   ├── grafana
+│   └── postgresql
 │
-├── files/
-├── templates/
-├── group_vars/
-├── host_vars/
-└── docs/
+├── files
+│
+├── templates
+│
+└── Jenkinsfile
 ```
 
 ---
 
-# Prerequisites
+# Features
 
-Before using this project, ensure you have:
+## Infrastructure Automation
 
-- Ubuntu Linux
-- Python 3
-- Ansible
-- SSH key authentication configured
-- A user with sudo privileges
-- VirtualBox, VMware, or another virtualization platform
-
-Install the required Ansible collections:
-
-```bash
-ansible-galaxy collection install -r requirements.yml
-```
+- Multi-server Ansible automation
+- Modular Ansible roles
+- Idempotent playbooks
+- SSH key authentication
 
 ---
 
-# Quick Start
+## CI/CD Pipeline
 
-Clone the repository
-
-```bash
-git clone https://github.com/khevi/enterprise-infrastructure-automation.git
-cd enterprise-infrastructure-automation
-```
-
-Copy the inventory
-
-```bash
-cp inventory/hosts.example inventory/hosts
-```
-
-Update your inventory with your server information.
-
-Verify connectivity
-
-```bash
-ansible linux -m ping
-```
-
-Deploy the baseline configuration
-
-```bash
-ansible-playbook playbooks/baseline.yml --ask-become-pass
-```
-
-Deploy Docker
-
-```bash
-ansible-playbook playbooks/docker.yml --ask-become-pass
-```
-
-Deploy Nginx
-
-```bash
-ansible-playbook playbooks/nginx-container.yml --ask-become-pass
-```
-
-Deploy PostgreSQL
-
-```bash
-ansible-playbook playbooks/postgresql.yml --ask-become-pass
-```
-
-Deploy Jenkins
-
-```bash
-ansible-playbook playbooks/jenkins.yml --ask-become-pass
-```
+- GitHub Feature Branch workflow
+- Jenkins Pipeline
+- Automated deployment
+- Deployment validation
+- Health checks
 
 ---
 
-# Current Features
+## Docker Deployment
 
-- SSH key-based authentication
-- Centralized Ansible inventory
-- Role-based Ansible project structure
-- Baseline Linux configuration
-- Docker installation and configuration
-- Docker Python SDK installation
 - Automated Nginx deployment
-- Custom web content deployment
-- PostgreSQL installation and configuration
-- Dedicated Jenkins server deployment
-- Idempotent Ansible playbooks
+- Container verification
+- Application health checks
 
 ---
 
-# Skills Demonstrated
+## Monitoring
 
-- Infrastructure as Code (IaC)
-- Linux System Administration
-- Configuration Management
-- Docker Containerization
-- PostgreSQL Administration
-- Jenkins CI/CD
-- SSH Authentication
-- Git Version Control
-- GitHub Collaboration
-- Enterprise Infrastructure Automation
+- Prometheus Server
+- Grafana Dashboard
+- Node Exporter
+- Infrastructure Metrics
+- Real-time Monitoring
+
+---
+
+## Databases
+
+- PostgreSQL Server
+- IBM Db2 Server
+
+---
+
+# Deployment Workflow
+
+```
+Developer
+
+     │
+
+GitHub Feature Branch
+
+     │
+
+Pull Request
+
+     │
+
+Jenkins Pipeline
+
+     │
+
+Ansible
+
+     │
+
+Docker Deployment
+
+     │
+
+Application Validation
+
+     │
+
+Prometheus Monitoring
+
+     │
+
+Grafana Dashboard
+```
+
+---
+
+# Monitoring Architecture
+
+```
+Node Exporter
+
+    │
+
+Prometheus
+
+    │
+
+Grafana
+
+    │
+
+Enterprise Dashboard
+```
+
+---
+
+# Jenkins Pipeline
+
+Current pipeline stages include:
+
+- Checkout Source Code
+- Verify Controller Access
+- Synchronize Deployment Repository
+- Ansible Syntax Validation
+- Deploy Application
+- Verify Docker Container
+- Application Health Check
+
+---
+
+# Monitoring Components
+
+The monitoring platform includes:
+
+- Prometheus
+- Grafana
+- Node Exporter
+
+Monitored systems:
+
+- ubuntu-lab2
+- app-lab2
+- pg-standby2
+- db2-lab2
+- jenkins-lab2
+- monitoring-lab2
+
+---
+
+# Current Status
+
+| Component | Status |
+|-----------|--------|
+| GitHub | ✅ |
+| Jenkins | ✅ |
+| Ansible | ✅ |
+| Docker | ✅ |
+| PostgreSQL | ✅ |
+| IBM Db2 | ✅ |
+| Prometheus | ✅ |
+| Grafana | ✅ |
 
 ---
 
@@ -241,87 +277,49 @@ ansible-playbook playbooks/jenkins.yml --ask-become-pass
 
 ## Completed
 
-- [x] Ubuntu Infrastructure
-- [x] SSH Key Authentication
-- [x] Ansible Inventory
-- [x] Role-Based Automation
-- [x] Docker Installation
-- [x] Nginx Container Deployment
-- [x] PostgreSQL Deployment
-- [x] Jenkins Server Deployment
+- GitHub Repository
+- Enterprise Ansible Roles
+- Jenkins Pipeline
+- Docker Deployment
+- PostgreSQL
+- IBM Db2
+- Prometheus
+- Grafana
+
+---
 
 ## In Progress
 
-- [ ] Jenkins Pipeline
-- [ ] GitHub Webhooks
-- [ ] Automated CI/CD Deployment
+- Repository Documentation
+- Custom Grafana Dashboards
+
+---
 
 ## Planned
 
-- [ ] IBM Db2 Automation
-- [ ] Prometheus Monitoring
-- [ ] Grafana Dashboards
-- [ ] Kubernetes (k3s)
-- [ ] Helm
-- [ ] Terraform
-- [ ] AWS Deployment
-- [ ] Azure Deployment
-- [ ] Google Cloud Deployment
+- Kubernetes (k3s)
+- Helm
+- GitHub Actions
+- ArgoCD
+- Terraform
+- AWS
+- Azure
+- Google Cloud Platform
 
 ---
 
-# Lessons Learned
+# Skills Demonstrated
 
-During this project I encountered and resolved several real-world engineering challenges, including:
-
-- Docker Python SDK integration with Ansible
-- SSH connectivity and authentication troubleshooting
-- Git SSH connection stability
-- Designing idempotent Ansible playbooks
-- Structuring reusable Ansible roles
-- Building a dedicated CI/CD server instead of combining services
-
----
-
-# Future Enhancements
-
-This project will continue evolving into a complete enterprise DevOps platform featuring:
-
-- Automated CI/CD pipelines
-- Infrastructure monitoring
-- Container orchestration
-- Infrastructure provisioning
-- Multi-cloud deployments
-- Production-style automation
-
-## CI/CD Pipeline
-
-The Jenkins validation pipeline connects the GitHub repository, Jenkins server, Ansible controller, and managed infrastructure.
-
-Current pipeline stages:
-
-- Checkout source code
-- Verify SSH access to the Ansible controller
-- Verify the Ansible installation
-- Test managed-host connectivity
-- Validate the Nginx playbook syntax
-- Verify the deployed application health
-
-## Enterprise Architecture
-
-The diagram below illustrates the overall architecture of the Enterprise Infrastructure Automation Platform.
-
-![Enterprise Infrastructure Architecture](docs/architecture.png)
-
----
-
-## Monitoring Dashboard
-
-The platform is monitored using Prometheus and Grafana. The dashboard below displays real-time CPU, memory, disk, network, and system health metrics collected from all managed servers.
-
-![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
-
-
+- Linux Administration
+- Infrastructure Automation
+- Configuration Management
+- Continuous Integration
+- Continuous Deployment
+- Docker
+- Monitoring
+- Observability
+- Git Workflow
+- Enterprise Documentation
 
 ---
 
@@ -329,6 +327,16 @@ The platform is monitored using Prometheus and Grafana. The dashboard below disp
 
 **Kossi Hevi-Doglan**
 
-DevOps Engineer | Cloud Engineer | Infrastructure Automation
+Enterprise DevOps Engineer
 
-GitHub: https://github.com/khevi
+GitHub:
+https://github.com/khevi
+
+LinkedIn:
+https://www.linkedin.com/in/philippe-hevi-94151660/
+
+---
+
+## License
+
+This project is provided for educational and portfolio purposes.
